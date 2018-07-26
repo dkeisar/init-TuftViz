@@ -11,7 +11,7 @@ function varargout = choose_tufts_for_ML(varargin)
 %
 %      CHOOSE_TUFTS_FOR_ML('Property','Value',...) creates a new CHOOSE_TUFTS_FOR_ML or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before choose_tufts_for_ML_OpeningFcn gets called.  An
+%      applied to the GUI before choo?se_tufts_for_ML_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
 %      stop.  All inputs are passed to choose_tufts_for_ML_OpeningFcn via varargin.
 %
@@ -35,7 +35,7 @@ gui_State = struct('gui_Name',       mfilename, ...
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
-global val;
+
 
 if nargout
     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
@@ -48,7 +48,7 @@ end
 
 
 % --- Executes just before choose_tufts_for_ML is made visible.
-function choose_tufts_for_ML_OpeningFcn(hObject, eventdata, ...
+function choose_tufts_for_ML_OpeningFcn(hObject, ~, ...
     trainhandle, bw,xcenter,ycenter,graindata)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
@@ -72,7 +72,7 @@ guidata(hObject, trainhandle);
 
 
 % --- Outputs from this function are returned to the command line.
-function choose_tufts_for_ML_OutputFcn(hObject, eventdata, trainhandle)
+function choose_tufts_for_ML_OutputFcn(~, ~, trainhandle)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -83,12 +83,12 @@ varargout{1} = trainhandle.output;
 
 
 % --- Executes on button press in un_attached_polygon_button.
-function un_attached_polygon_button_Callback(hObject, eventdata, trainhandle)
+function un_attached_polygon_button_Callback(~, ~, trainhandle)
 % hObject    handle to un_attached_polygon_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global val
-fig=figure
+fig=figure;
 fig.Name='Choose the area of the polygon';
 h=croping(trainhandle.bw);
 close
@@ -100,7 +100,7 @@ for i=1:length(trainhandle.xcenter)
             val.y=[val.y,trainhandle.ycenter(i)];
             val.label=[val.label,0];
             val.box=[val.box;trainhandle.graindata(i).BoundingBox];
-            rect=imrect(gca,trainhandle.graindata(i).BoundingBox)
+            rect=imrect(gca,trainhandle.graindata(i).BoundingBox);
             setColor(rect,'Red');
             val.tufts(length(val.x))=i;
             counter=counter+1;
@@ -110,7 +110,7 @@ for i=1:length(trainhandle.xcenter)
             val.label=0;
             val.tufts=i;
             val.box=trainhandle.graindata(i).BoundingBox;
-            rect=imrect(gca,trainhandle.graindata(i).BoundingBox)
+            rect=imrect(gca,trainhandle.graindata(i).BoundingBox);
             setColor(rect,'Red');
             counter=counter+1;
         end
@@ -119,7 +119,7 @@ end
 
 
 % --- Executes on button press in un_attached_tufts_button.
-function un_attached_tufts_button_Callback(hObject, eventdata, trainhandle)
+function un_attached_tufts_button_Callback(~, ~, trainhandle)
 % hObject    handle to un_attached_tufts_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -138,7 +138,7 @@ for i=1:length(x_point)
             val.label=[val.label,0];
             val.tufts(length(val.x))=index;
             val.box=[val.box;trainhandle.graindata(index).BoundingBox];
-            rect=imrect(gca,trainhandle.graindata(index).BoundingBox)
+            rect=imrect(gca,trainhandle.graindata(index).BoundingBox);
             setColor(rect,'Red');
         end
     else
@@ -150,8 +150,8 @@ for i=1:length(x_point)
         val.label=0;
         val.tufts=index;
         val.box=trainhandle.graindata(index).BoundingBox;
-        rect=imrect(gca,trainhandle.graindata(index).BoundingBox)
-        setColor(rect,'Blue');
+        rect=imrect(gca,trainhandle.graindata(index).BoundingBox);
+        setColor(rect,'Red');
     end
     
 end
@@ -160,7 +160,7 @@ end
 
 
 % --- Executes on button press in attached_tufts_button.
-function attached_tufts_button_Callback(hObject, eventdata, trainhandle)
+function attached_tufts_button_Callback(~, ~, trainhandle)
 % hObject    handle to attached_tufts_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -181,7 +181,7 @@ for i=1:length(x_point)
             
             val.tufts(length(val.x))=index;
             val.box=[val.box;trainhandle.graindata(index).BoundingBox];
-            rect=imrect(gca,trainhandle.graindata(index).BoundingBox)
+            rect=imrect(gca,trainhandle.graindata(index).BoundingBox);
             setColor(rect,'Blue');
         end
     else
@@ -193,7 +193,7 @@ for i=1:length(x_point)
         val.label=1;
         val.tufts=index;
         val.box=trainhandle.graindata(index).BoundingBox;
-        rect=imrect(gca,trainhandle.graindata(index).BoundingBox)
+        rect=imrect(gca,trainhandle.graindata(index).BoundingBox);
         setColor(rect,'Blue');
     end
     
@@ -204,12 +204,12 @@ end
 
 
 % --- Executes on button press in attached_polygon_button.
-function attached_polygon_button_Callback(hObject, eventdata, trainhandle)
+function attached_polygon_button_Callback(~, ~, trainhandle)
 % hObject    handle to attached_polygon_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global val
-fig=figure
+fig=figure;
 fig.Name='Choose the area of the polygon';
 h=croping(trainhandle.bw);
 close
@@ -220,8 +220,8 @@ for i=1:length(trainhandle.xcenter)
             val.y=[val.y,trainhandle.ycenter(i)];
             val.label=[val.label,1];
             val.box=[val.box;trainhandle.graindata(i).BoundingBox];
-            %rect=imrect(gca,trainhandle.graindata(i).BoundingBox)
-            %setColor(rect,'Blue');
+            rect=imrect(gca,trainhandle.graindata(i).BoundingBox);
+            setColor(rect,'Blue');
             val.tufts(length(val.x))=i;
         else
             val.x=trainhandle.xcenter(i);
@@ -238,7 +238,7 @@ end
     
     
     % --- Executes on button press in pushbutton5.
-    function pushbutton5_Callback(hObject, eventdata, trainhandle)
+    function pushbutton5_Callback(~, ~, ~)
     % hObject    handle to pushbutton5 (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)

@@ -32,6 +32,22 @@ labeled = labelmatrix(cc);
 graindata = regionprops(labeled,'basic');
 graindata_Orientation=regionprops(labeled,'Orientation');
 
+if ImageTune.stdd.Value~= inf
+    for i=1:length(graindata)
+        graindata_size(i)=graindata(i).Area;
+    end
+    stdd=std(graindata_size); meann=mean(graindata_size);
+
+    bw = bwareafilt(bw, [meann-stdd*ImageTune.stdd.Value meann+stdd*ImageTune.stdd.Value]);
+
+    % Lable all the components that are connected with 8 pixels around them
+    cc = bwconncomp(bw, 8);
+    labeled = labelmatrix(cc);
+    % Extract the information about the labeled data - Basic + Orientation
+    graindata = regionprops(labeled,'basic');
+    graindata_Orientation=regionprops(labeled,'Orientation');
+end
+
 % send to make streamline drawing or/and contor map drawing
 try
     if whatToShow=="streamlines"

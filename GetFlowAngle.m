@@ -1,4 +1,4 @@
-function [FlowAngle] = GetFlowAngle(fig)
+function [FlowAngle] = GetGravityAngle(fig)
 [x,y] = ginput(1);
 if x<0
     FlowAngle=rad2deg(atan(y/x))+180;

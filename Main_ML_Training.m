@@ -1,14 +1,15 @@
-function [weightVector] = ...
-    Main_ML_Training(imageTune,noOfImages)
+function [weightVectors,miniweightVectors] = ...
+    Main_ML_Training(imageTune,noOfImages,weightVectors,miniweightVectors)
+%%
 % Main ML Training func
 WindAngle=imageTune.FlowAngle;
-noOfImages=5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% delete!!!!!!
+%%
 for img=1:noOfImages %for each frame
     %% tune the image and segment it
     %devide into frames and read them
     I = read(imageTune.OriginalVideo, ...
         round(rand(1)*imageTune.OriginalVideo.NumberOfFrames));%read random frame
-    %make the frame B&W, crop and mask
+   %make the frame B&W, crop and mask
     I=rgb2gray(I);
     I(imageTune.Mask)=256;
     I = imcrop(I, imageTune.CropFrame);
@@ -27,35 +28,47 @@ for img=1:noOfImages %for each frame
     
     %% Create the training set
     % create the traing set
-    [tuftSet,tuftLabel,Orientation]=create_training_set(labeled,bw);
+    [tuftSet,tuftLabel,Orientation]=create_training_set_main(labeled,bw,deg2rad(WindAngle));
     
     %calculate the angle
     for i=1:length(Orientation)
-        tuftSet(i).windRelatedAngle=abs(cos(deg2rad((WindAngle-...
-            Orientation(i).Orientation))));
+        tuftSet(i).windRelatedAngle=deg2rad((WindAngle-...
+            Orientation(i).Orientation));
     end
-    if img==1
-        noOfFeatures=8;
-        weightVector=ones(1,noOfFeatures)/noOfFeatures;
+    if ~exist('weightVector')
+        noOfFeatures=9;
+        miniweightVector=zeros(1,noOfFeatures);
+        weightVector=zeros(1,noOfFeatures);%ones(1,noOfFeatures)/noOfFeatures;
+    else
+        if size(weightVectors,1)>1
+            meanweightVector=mean(weightVectors);
+            meanminiweightVector=mean(miniweightVectors);
+            weightVector=meanweightVector;
+            miniweightVector=meanminiweightVector;
+        end
     end
     lh=LearningHandler;
     % this func should start BP and get back the train matrix
-    [weightVector,tuftMat] =lh.process(tuftSet,tuftLabel,weightVector);
-    if img==1
+    [weightVector,tuftMat,miniweightVector] =lh.process(tuftSet,...
+        tuftLabel,weightVector,miniweightVector);
+    if img==1 && noOfImages>1
         tuftVectors=tuftMat;
         tuftLabels=tuftLabel;
         weightVectors=weightVector;
         meanweightVector=weightVector;
+        miniweightVectors=miniweightVector;
+        meanminiweightVector=miniweightVectors;
         %Orientations=Orientation; %if we want to guess wind diraction
     else
-        tuftVectors=[tuftVectors;tuftMat];
-        tuftLabels=[tuftLabels;tuftLabel];
         weightVectors=[weightVectors;weightVector];
+        miniweightVectors=[miniweightVectors;miniweightVector];
         meanweightVector=mean(weightVectors);
-        weightVector=weightVector;
+        meanminiweightVector=mean(miniweightVectors);
+        weightVector=meanweightVector;
+        miniweightVector=meanminiweightVector;
     end
     
-    contourmap_drawer_ML(weightVector,tuftMat,imageTune.CroppedMask,I)
+    contourmap_drawer_ML(weightVector,tuftMat,imageTune.CroppedMask,I);
 end
 
 end

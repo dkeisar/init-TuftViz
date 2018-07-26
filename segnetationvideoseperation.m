@@ -1,28 +1,28 @@
-function segnetationvideoseperation(ImageTune)
+function segnetationvideoseperation(imageTune)
 % This function gets the user video, dividing it into frames. Each frame
 %  then is tuned by the parameters difined by the user. Later it send each
 %  image for segmentaton and map drawing and saves those images into a
 %  video (AVI)
 
-for img = 1:10:ImageTune.OriginalVideo.NumberOfFrames;  %for each frame
+for img = 1:90%ImageTune.OriginalVideo.NumberOfFrames;  %for each frame
     %devide into frames and read them
-    I = read(ImageTune.OriginalVideo, img);
+    I = read(imageTune.OriginalVideo, img);
     %make the frame B&W, crop and mask 
     I=rgb2gray(I);
-    I(ImageTune.Mask)=256;
-    I = imcrop(I, ImageTune.CropFrame);
+    I(imageTune.Mask)=256;
+    I = imcrop(I, imageTune.CropFrame);
     %tune the frame by the parameters difined by the user
     try
-    I(:,:,:)=I(:,:,:)*(50^log((ImageTune.BrightnessKnob.Value+0.5)));
-    I= locallapfilt(I, ImageTune.SigmaKnob.Value, ImageTune.AlphaKnob.Value);
-    I = imadjust(I,[ImageTune.LowInSlider.Value ImageTune.HighInSlider.Value],[],...
-        ImageTune.GammaKnob.Value);
-    I=imsharpen(I,'Radius',ImageTune.RadiusSlider.Value,...
-        'Amount',ImageTune.SharpnessstrengthKnob.Value,...
-        'Threshold',ImageTune.ThresholdSlider.Value);
+    I(:,:,:)=I(:,:,:)*(50^log((imageTune.BrightnessKnob.Value+0.5)));
+    I= locallapfilt(I, imageTune.SigmaKnob.Value, imageTune.AlphaKnob.Value);
+    I = imadjust(I,[imageTune.LowInSlider.Value imageTune.HighInSlider.Value],[],...
+        imageTune.GammaKnob.Value);
+    I=imsharpen(I,'Radius',imageTune.RadiusSlider.Value,...
+        'Amount',imageTune.SharpnessstrengthKnob.Value,...
+        'Threshold',imageTune.ThresholdSlider.Value);
     end
     %segment the frame
-    matlab_seg(I,ImageTune,"streamlines");
+    matlab_seg(I,imageTune,"streamlines");
     % save the figure as frame and close it
     frame=getframe(gcf);
     close(gcf)
