@@ -51,6 +51,10 @@ for img=1:noOfImages %for each frame
     % this func should start BP and get back the train matrix
     [weightVector,tuftMat,miniweightVector] =lh.process(tuftSet,...
         tuftLabel,weightVector,miniweightVector);
+    [h,l]=size(bw);
+    maxClusters = 5;
+    labelDistanceFactor = 4;
+    calcCluster(tuftMat,h,l, maxClusters, labelDistanceFactor);
     if img==1 && noOfImages>1
         tuftVectors=tuftMat;
         tuftLabels=tuftLabel;
